@@ -1,11 +1,11 @@
 "use client";
-import React, { useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import { Calendar, Search } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { BlogCard } from '../components/blog/blogCard';
+import { BlogCard } from '../components/blog/BlogCard';
 
 interface BlogPost {
-  id: string;
+  id: number; // 🔧 Fixed: Changed from string to number to match your data
   slug: string;
   title: string;
   thumbnail: string;
@@ -14,13 +14,8 @@ interface BlogPost {
   content: string;
 }
 
-interface BlogsPageProps {
-  onBlogClick?: (slug: string) => void;
-}
-
-const BlogsPage: React.FC<BlogsPageProps> = ({
-  onBlogClick
-}) => {
+// Remove the custom props interface since this is a page component
+const BlogsPageContent: React.FC = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -40,10 +35,10 @@ const BlogsPage: React.FC<BlogsPageProps> = ({
     setSearchTerm(q);
   }, [searchParams]);
 
-  // Default blog click handler
-  const handleBlogClick = onBlogClick || ((slug: string) => {
+  // Handle blog click - always navigate to blog page
+  const handleBlogClick = (slug: string) => {
     router.push(`/blog/${slug}`);
-  });
+  };
 
   // Fetch blogs from API
   const fetchBlogs = async (tag: string = 'ALL', query: string = '') => {
@@ -195,7 +190,6 @@ const BlogsPage: React.FC<BlogsPageProps> = ({
           )}
         </div>
 
-
         {/* Search and Filter Section */}
         <div className="mb-8 space-y-4">
           {/* Search Bar */}
@@ -292,6 +286,25 @@ const BlogsPage: React.FC<BlogsPageProps> = ({
         )}
       </div>
     </div>
+  );
+};
+
+// Loading component for Suspense fallback
+const BlogsLoading = () => (
+  <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+    <div className="text-center">
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-black mx-auto mb-4"></div>
+      <p className="text-gray-600">読み込み中...</p>
+    </div>
+  </div>
+);
+
+// Main page component with Suspense boundary
+const BlogsPage: React.FC = () => {
+  return (
+    <Suspense fallback={<BlogsLoading />}>
+      <BlogsPageContent />
+    </Suspense>
   );
 };
 

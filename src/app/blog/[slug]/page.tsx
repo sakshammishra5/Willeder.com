@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 
 interface BlogPost {
-  id: string;
+  id: number;
   slug: string;
   title: string;
   thumbnail: string;
@@ -94,6 +94,18 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ params }) => {
   useEffect(() => {
     fetchBlogPost(slug);
   }, [slug]);
+
+  // Add this check early in your component, before the JSX return
+if (!blogPost) {
+  return (
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-black mx-auto mb-4"></div>
+        <p className="text-gray-600">読み込み中...</p>
+      </div>
+    </div>
+  );
+}
 
   if (loading) {
     return (

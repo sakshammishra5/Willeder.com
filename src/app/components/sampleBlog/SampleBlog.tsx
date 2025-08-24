@@ -1,10 +1,10 @@
 "use client";
 import React from 'react';
 import { Calendar, ArrowRight } from 'lucide-react';
-import { BlogCard } from '../blog/blogCard';
+import { BlogCard } from '../blog/BlogCard';
 import { useRouter } from 'next/navigation';
 interface BlogPost {
-  id: string;
+  id: number;
   slug: string;
   title: string;
   thumbnail: string;
@@ -36,7 +36,7 @@ export const SampleBlog: React.FC<SampleBlogProps> = ({
 
   const blogPosts: BlogPost[] = [
     {
-      id: "figma-tutorial",
+      id: 56,
       slug: "figma-web-design-tutorial",
       title: "Figmaで始める！効率的なWebサイト設計のコツ",
       thumbnail: "https://images.unsplash.com/photo-1609921141835-710b7fa6e438?w=400&h=300&fit=crop",
@@ -45,7 +45,7 @@ export const SampleBlog: React.FC<SampleBlogProps> = ({
       content: "Figma tutorial content..."
     },
     {
-      id: "ui-ux-improvement",
+      id: 77,
       slug: "ui-ux-business-efficiency",
       title: "UI/UX改善で業務効率を高めるデザイン思考",
       thumbnail: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&h=300&fit=crop",
@@ -54,7 +54,7 @@ export const SampleBlog: React.FC<SampleBlogProps> = ({
       content: "UI/UX improvement content..."
     },
     {
-      id: "cloud-system",
+      id: 99,
       slug: "cloud-next-generation-web-system",
       title: "クラウド活用とデザインの融合で実現する次世代Webシステム",
       thumbnail: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=400&h=300&fit=crop",

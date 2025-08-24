@@ -1,16 +1,10 @@
 // app/api/blogs/[slug]/route.ts
 import { NextRequest, NextResponse } from 'next/server';
-import { data } from '../../../data/json';
-// You'll need to import your blog data from your data/json.js file
-// import { blogPosts } from '@/data/json.js'; // Adjust path as needed
+import { data } from '../../../data/json'; // ✅ Keep your actual data source
 
-// Sample blog data structure - replace this with your actual data import
-const blogPosts = [
- ...data.blogs
-];
-
+// Strong typing for blog posts
 interface BlogPost {
-  id: string;
+  id: number; // 🔧 Fixed: Changed from string to number to match your data
   slug: string;
   title: string;
   thumbnail: string;
@@ -19,39 +13,45 @@ interface BlogPost {
   content: string;
 }
 
+// ✅ Use type assertion to enforce data shape
+const blogPosts: BlogPost[] = data.blogs;
+
 export async function GET(
-  request: NextRequest,
-  { params }: { params: { slug: string } }
+  _req: NextRequest,
+  context: { params: Promise<{ slug: string }> } // 🔧 Fixed: params is now Promise
 ) {
   try {
-    const { slug } = params;
-    
-    // Find the blog post by slug
-    const blogPost = blogPosts.find(post => post.slug === slug);
-    
+    // 🔧 Fixed: Await the params
+    const { slug } = await context.params;
+
+    // 🔍 Case-insensitive match for robustness
+    const blogPost = blogPosts.find(
+      (post) => post.slug.toLowerCase() === slug.toLowerCase()
+    );
+
     if (!blogPost) {
       return NextResponse.json(
         { success: false, error: 'Blog post not found' },
         { status: 404 }
       );
     }
-    
-    // Get related posts (same tags, excluding current post)
+
+    // 🔗 Related posts by shared tags (excluding current)
     const relatedPosts = blogPosts
-      .filter(post => 
-        post.slug !== slug && 
-        post.tags.some(tag => blogPost.tags.includes(tag))
+      .filter(
+        (post) =>
+          post.slug !== slug &&
+          post.tags.some((tag) => blogPost.tags.includes(tag))
       )
       .slice(0, 3); // Limit to 3 related posts
-    
+
     return NextResponse.json({
       success: true,
       data: {
         post: blogPost,
-        relatedPosts
-      }
+        relatedPosts,
+      },
     });
-    
   } catch (error) {
     console.error('Error fetching blog post:', error);
     return NextResponse.json(

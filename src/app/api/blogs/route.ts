@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { data } from '../../data/json';
 
 interface BlogPost {
-  id: string;
+  id: number;
   slug: string;
   title: string;
   thumbnail: string;

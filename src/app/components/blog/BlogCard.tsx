@@ -3,7 +3,7 @@ import React from 'react';
 import { Calendar } from 'lucide-react';
 
 interface BlogCardProps {
-  id: string;
+  id: number;
   slug: string;
   title: string;
   thumbnail: string;
