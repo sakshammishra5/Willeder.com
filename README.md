@@ -4,8 +4,8 @@ A pixel-perfect reproduction of the Figma design built with Next.js 15.4, TypeSc
 
 ## 🚀 Live Demo
 
-- **Production URL**: [\[Your Vercel URL\]](https://willeder-com.vercel.app/)
-- **GitHub Repository**: [\[Your GitHub URL\]](https://github.com/sakshammishra5/Willeder.com)
+- **Production URL**: [https://willeder-com.vercel.app\](https://willeder-com.vercel.app/)
+- **GitHub Repository**: [https://github.com/sakshammishra5/Willeder.com\](https://github.com/sakshammishra5/Willeder.com)
 
 ## 📋 Project Overview
 
