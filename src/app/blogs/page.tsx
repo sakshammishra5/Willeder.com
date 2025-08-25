@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { BlogCard } from '../components/blog/BlogCard';
 
 interface BlogPost {
-  id: number; // 🔧 Fixed: Changed from string to number to match your data
+  id: number; 
   slug: string;
   title: string;
   thumbnail: string;
