@@ -37,10 +37,7 @@ export function Header() {
         <div className="container flex items-center justify-between min-h-[60px] lg:min-h-[80px] px-4">
           {/* Logo - Always on the left */}
           <Link href="/" className="flex items-center space-x-2 flex-shrink-0">
-            <div className="w-8 h-8 bg-red-600 flex items-center justify-center">
-              <span className="text-white text-lg font-bold">W</span>
-            </div>
-            <span className="text-lg font-bold text-gray-900">Willeder</span>
+           <img srcSet="https://www.willeder.com/assets/image/willeder-logo.svg" alt="" />
           </Link>
 
           {/* Desktop Navigation - All items on the right */}
@@ -111,10 +108,7 @@ export function Header() {
           {/* Header with logo and close button */}
           <div className="flex items-center justify-between px-4 py-4">
             <Link href="/" className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-red-600 flex items-center justify-center">
-                <span className="text-white text-lg font-bold">W</span>
-              </div>
-              <span className="text-lg font-bold text-gray-900">Willeder</span>
+             <img srcSet="https://www.willeder.com/assets/image/willeder-logo.svg" alt="" srcset="" />
             </Link>
             
             <button
