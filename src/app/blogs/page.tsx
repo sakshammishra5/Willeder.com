@@ -271,19 +271,6 @@ const BlogsPageContent: React.FC = () => {
           </div>
         )}
 
-        {/* Debug Info (remove in production) */}
-        {process.env.NODE_ENV === 'development' && (
-          <div className="mt-8 p-4 bg-gray-100 rounded-lg text-sm">
-            <h4 className="font-bold mb-2">Debug Info:</h4>
-            <p>Selected Tag: {selectedTag}</p>
-            <p>Search Query: {searchTerm || 'None'}</p>
-            <p>Total Posts: {blogPosts.length}</p>
-            <p>Available Tags: {availableTags.join(', ')}</p>
-            <p>Current URL Params: {searchParams.toString()}</p>
-            <p>Loading: {loading ? 'Yes' : 'No'}</p>
-            <p>Error: {error || 'None'}</p>
-          </div>
-        )}
       </div>
     </div>
   );

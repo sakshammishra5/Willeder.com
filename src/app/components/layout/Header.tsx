@@ -33,7 +33,7 @@ export function Header() {
 
   return (
     <>
-      <header className="border-b flex justify-between items-center bg-white fixed w-full z-20 top-0">
+      <header className="border-b flex justify-end items-center bg-white fixed w-full z-20 top-0">
         <div className="container flex items-center justify-between min-h-[60px] lg:min-h-[80px] px-4">
           {/* Logo - Always on the left */}
           <Link href="/" className="flex items-center space-x-2 flex-shrink-0">

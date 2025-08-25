@@ -225,18 +225,6 @@ if (!blogPost) {
           </div>
         </div>
 
-        {/* Debug Info (remove in production) */}
-        {process.env.NODE_ENV === 'development' && (
-          <div className="mt-8 p-4 bg-gray-100 rounded-lg text-sm">
-            <h4 className="font-bold mb-2">Debug Info:</h4>
-            <p>Slug: {slug}</p>
-            <p>Post ID: {blogPost.id}</p>
-            <p>Title: {blogPost.title}</p>
-            <p>Tags: {blogPost.tags.join(', ')}</p>
-            <p>Created: {blogPost.createdAt}</p>
-            <p>Content Length: {blogPost.content.length} characters</p>
-          </div>
-        )}
       </article>
     </div>
   );
