@@ -108,7 +108,7 @@ export function Header() {
           {/* Header with logo and close button */}
           <div className="flex items-center justify-between px-4 py-4">
             <Link href="/" className="flex items-center space-x-2">
-             <img srcSet="https://www.willeder.com/assets/image/willeder-logo.svg" alt="" srcset="" />
+             <img srcSet="https://www.willeder.com/assets/image/willeder-logo.svg" alt=""  />
             </Link>
             
             <button
@@ -131,18 +131,20 @@ export function Header() {
           <div className="flex flex-col items-center justify-center flex-1 px-4 py-8 space-y-8">
             <Link 
               href="/" 
-              className="block text-lg font-medium text-gray-900 hover:text-red-600 transition-colors text-center py-4"
+              className="block  text-lg font-medium text-gray-900 hover:text-red-600 transition-colors text-center py-4"
               onClick={() => setIsMobileMenuOpen(false)}
             >
               TOP
+              <div className="flex-1 h-px bg-red-400 max-w-24 sm:max-w-xs"></div>
             </Link>
             
             <Link 
               href="/blogs" 
-              className="block text-lg font-medium text-gray-900 hover:text-red-600 transition-colors text-center py-4"
+              className="block  text-lg font-medium text-gray-900 hover:text-red-600 transition-colors text-center py-4"
               onClick={() => setIsMobileMenuOpen(false)}
             >
               ブログ
+              <div className="flex-1 h-px bg-red-400 max-w-24 sm:max-w-xs"></div>
             </Link>
             
             <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)} className="w-full max-w-xs">
