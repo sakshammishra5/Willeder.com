@@ -22,7 +22,7 @@ export function Header() {
   // Prevent body scroll when mobile menu is open
   useEffect(() => {
     if (isMobileMenuOpen) {
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = 'visible';
     } else {
       document.body.style.overflow = 'unset';
     }
@@ -102,11 +102,11 @@ export function Header() {
         </div>
       </header>
 
-      {/* Mobile Menu Overlay - Full Screen */}
+      {/* Mobile Menu Overlay */}
       {isMobileMenuOpen && (
-        <div className="sm:hidden fixed inset-0 z-30 bg-white">
+        <div className="sm:hidden fixed top-0 left-0 right-0 z-30 bg-white shadow-lg">
           {/* Header with logo and close button */}
-          <div className="flex items-center justify-between px-4 py-4">
+          <div className="flex items-center justify-between px-4 py-4 border-b border-gray-200">
             <Link href="/" className="flex items-center space-x-2">
              <img srcSet="https://www.willeder.com/assets/image/willeder-logo.svg" alt=""  />
             </Link>
@@ -128,34 +128,36 @@ export function Header() {
           </div>
 
           {/* Menu Items */}
-          <div className="flex flex-col items-center justify-center flex-1 px-4 py-8 space-y-8">
+          <div className="flex flex-col">
+            {/* Navigation Links */}
             <Link 
               href="/" 
-              className="block  text-lg font-medium text-gray-900 hover:text-red-600 transition-colors text-center py-4"
+              className="block w-full text-center py-4 text-lg font-medium text-gray-900 hover:text-red-600 transition-colors border-b border-gray-200"
               onClick={() => setIsMobileMenuOpen(false)}
             >
               TOP
-              <div className="flex-1 h-px bg-red-400 max-w-24 sm:max-w-xs"></div>
             </Link>
             
             <Link 
               href="/blogs" 
-              className="block  text-lg font-medium text-gray-900 hover:text-red-600 transition-colors text-center py-4"
+              className="block w-full text-center py-4 text-lg font-medium text-gray-900 hover:text-red-600 transition-colors border-b border-gray-200"
               onClick={() => setIsMobileMenuOpen(false)}
             >
               ブログ
-              <div className="flex-1 h-px bg-red-400 max-w-24 sm:max-w-xs"></div>
             </Link>
             
-            <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)} className="w-full max-w-xs">
-              <Button
-                variant="primary"
-                className="w-full bg-red-600 hover:bg-red-700 text-white text-base py-4 px-8 rounded-full font-medium transition-colors"
-              >
-                お問い合わせはこちら
-                <span className="ml-2">▶</span>
-              </Button>
-            </Link>
+            {/* Contact Button */}
+            <div className="p-4">
+              <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)}>
+                <Button
+                  variant="primary"
+                  className="w-full bg-red-600 hover:bg-red-700 text-white text-base py-3 px-6 rounded-full font-medium transition-colors"
+                >
+                  お問い合わせはこちら
+                  <span className="ml-2">▶</span>
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       )}
