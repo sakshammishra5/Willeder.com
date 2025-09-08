@@ -1,16 +1,44 @@
 // app/api/blogs/[slug]/route.ts
 import { NextRequest, NextResponse } from 'next/server';
-import { data } from '../../../data/json'; // ✅ Keep your actual data source
+import { data } from '../../../data/data'; // ✅ Keep your actual data source
 
 // Strong typing for blog posts
+// Updated Blog Post Data Structure for Japanese Design Blog
 interface BlogPost {
-  id: number; // 🔧 Fixed: Changed from string to number to match your data
+  id: number;
   slug: string;
   title: string;
-  thumbnail: string;
+  createdAt: string; // Format: "YYYY.MM.DD" as shown in design
   tags: string[];
-  createdAt: string;
-  content: string;
+  thumbnail: string;
+  content: {
+    h1Title: string; // Main hero title
+    h2Sections: Array<{
+      title: string;
+      content: string;
+      images?: string[];
+      diagramData?: any; // For Auto Layout diagrams
+    }>;
+    h3Sections: Array<{
+      title: string;
+      content: string;
+      isInitialDesign?: boolean; // For styling red text
+    }>;
+    bodyText: string; // Main introductory paragraph
+    blockquote?: string;
+    smallText?: string; // For additional notes
+    additionalImages?: string[];
+    commentSection?: {
+      enabled: boolean;
+      sampleComments?: Array<{
+        author: string;
+        message: string;
+        timestamp: string;
+      }>;
+    };
+    conclusionTitle: string;
+    conclusionText: string;
+  };
 }
 
 // ✅ Use type assertion to enforce data shape

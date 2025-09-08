@@ -9,7 +9,7 @@ interface FooterProps {
   return (
     <div className={`w-full ${className}`}>
       {/* CTA Section */}
-      <section className="bg-gray-200 py-16 px-4">
+      <section className="bg-[#B9BDC6] py-24 px-4 sm:py-24 sm:px-6 lg:py-24 lg:px-20">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-xl md:text-2xl text-gray-800 mb-8 leading-relaxed">
             <span className="block md:inline">どんな内容でも、</span>

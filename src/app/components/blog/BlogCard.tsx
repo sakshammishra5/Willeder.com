@@ -1,6 +1,5 @@
 
-import React from 'react';
-import { Calendar } from 'lucide-react';
+import React, { useState } from 'react';
 
 interface BlogCardProps {
   id: number;
@@ -9,7 +8,22 @@ interface BlogCardProps {
   thumbnail: string;
   tags: string[];
   createdAt: string;
-  content: string;
+  content: string | {
+    h1Title: string;
+    h2Sections: { 
+      title: string; 
+      content: string; 
+      images?: string[]; 
+      diagramData?: any; 
+    }[];
+    h3Sections: { 
+      title: string; 
+      content: string; 
+      isInitialDesign?: boolean; 
+    }[];
+    conclusionText: string;
+    // Add other properties as needed
+  };
   onClick?: () => void;
 }
 
@@ -23,6 +37,8 @@ export const BlogCard: React.FC<BlogCardProps> = ({
   content,
   onClick
 }) => {
+  const [allTag,setAllTag]=useState(['It Consulting','Design','Branding','Engineering','Other']);
+
   // Format date to match the design (YYYY.MM.DD)
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -34,81 +50,53 @@ export const BlogCard: React.FC<BlogCardProps> = ({
 
   // Get tag colors based on tag name
   const getTagColor = (tag: string) => {
-    const colorMap: { [key: string]: string } = {
-      'IT Consulting': 'bg-gray-200 text-gray-700',
-      'Engineering': 'bg-gray-200 text-gray-700',
-      'Branding': 'bg-black text-white',
-      'Design': 'bg-black text-white',
-      'Other': 'bg-gray-200 text-gray-700',
-      'sample': 'bg-gray-200 text-gray-700',
-      'replace-me': 'bg-black text-white'
-    };
-    return colorMap[tag] || 'bg-gray-200 text-gray-700';
+    if(tags.includes(tag)){
+      return 'border border-black text-black';
+    }
+    return 'border border-[#B9BDC6] text-[#B9BDC6]';
   };
 
-  return (
-    <div 
-      className="bg-white rounded-lg shadow-lg overflow-hidden cursor-pointer transition-all duration-300 hover:shadow-xl hover:scale-105 max-w-sm"
-      onClick={onClick}
-    >
-      {/* Header with thumbnail */}
-      <div className="relative">
-        <img 
-          src={thumbnail} 
-          alt={title}
-          className="w-full h-48 object-cover"
-        />
-        
-        {/* Dark overlay with Figma-style branding */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
-          <div className="absolute bottom-4 left-4">
-            {/* Figma logo representation */}
-            <div className="flex items-center gap-2 mb-2">
-              <div className="flex">
-                <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                <div className="w-3 h-3 bg-purple-500 rounded-full -ml-1"></div>
-              </div>
-              <div className="flex">
-                <div className="w-3 h-3 bg-blue-400 rounded-full"></div>
-                <div className="w-3 h-3 bg-green-400 rounded-full -ml-1"></div>
-              </div>
-              <span className="text-white font-semibold text-lg ml-2">Figma</span>
-            </div>
-            
-            {/* Japanese text */}
-            <div className="text-white">
-              <p className="text-sm font-medium">初心者向け！</p>
-              <p className="text-xs">実例で学ぶFigmaの使い方</p>
-            </div>
-          </div>
-        </div>
+return (
+<div 
+  className="w-full max-w-[343px] sm:max-w-[350px] lg:max-w-[420px] flex flex-col gap-6 bg-white rounded-2xl shadow-lg overflow-hidden cursor-pointer max-h-[520px]"
+  onClick={onClick}
+>
+  {/* Header with thumbnail */}
+  <div className="relative aspect-[4/3] w-full">
+    <img 
+      src={thumbnail} 
+      alt={title}
+      className="w-full h-full object-cover"
+    />   
+  </div>
+
+  {/* Content */}
+  <div className="px-2 pt-1 pb-4 flex flex-col gap-6">
+    <div className='flex flex-col gap-1'>
+      {/* Date */}
+      <div className="flex items-center gap-2 text-[#737B8C] text-sm font-semibold font-jost">
+        <span>{formatDate(createdAt)}</span>
       </div>
 
-      {/* Content */}
-      <div className="p-4 space-y-3">
-        {/* Date */}
-        <div className="flex items-center gap-2 text-gray-500 text-sm">
-          <Calendar className="w-4 h-4" />
-          <span>{formatDate(createdAt)}</span>
-        </div>
-
-        {/* Title */}
-        <h3 className="font-bold text-gray-900 text-lg leading-tight line-clamp-2">
-          {title}
-        </h3>
-
-        {/* Tags */}
-        <div className="flex flex-wrap gap-2 pt-2">
-          {tags.map((tag, index) => (
-            <span
-              key={index}
-              className={`px-3 py-1 text-xs font-medium rounded-full ${getTagColor(tag)}`}
-            >
-              {tag}
-            </span>
-          ))}
-        </div>
-      </div>
+      {/* Title */}
+      <h3 className="font-bold font-noto-sans-jp text-black text-2xl leading-[150%] tracking-[5%] line-clamp-2">
+        {title}
+      </h3>
     </div>
-  );
+
+    {/* Tags */}
+    <div className="box-border font-jost w-full flex justify-start flex-wrap gap-1">
+      {allTag.map((tag, index) => (
+        <span
+          key={index}
+          className={`flex justify-center items-center h-[22px] px-4 text-xs font-medium rounded-[4px] ${getTagColor(tag)}`}
+        >
+          {tag}
+        </span>
+      ))}
+    </div>
+  </div>
+</div>
+);
+
 };

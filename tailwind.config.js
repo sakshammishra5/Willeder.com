@@ -9,7 +9,22 @@ module.exports = {
     "./src/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+       fontFamily: {
+        'noto-sans-jp': ['"Noto Sans JP"', 'sans-serif'],
+        'jost': ['Jost', 'sans-serif'],
+      },
+      fontSize: {
+        'tiny': '16px',   
+        'huge': '4rem',      
+      },
+       lineHeight: {
+        'extra-compact': '1.25', 
+      },
+       screens: {
+        'sm': '600px', 
+      },
+    },
   },
   plugins: [],
 }

@@ -1,17 +1,44 @@
 "use client";
-import React, { useEffect, useState } from 'react';
-import { Calendar, Clock, ArrowLeft, Share2 } from 'lucide-react';
+import { BlogCard } from '@/app/components/blog/BlogCard';
+import { SampleBlog } from '@/app/components/sampleBlog/SampleBlog';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
+import React, { useEffect, useState } from 'react';
 
 interface BlogPost {
   id: number;
   slug: string;
   title: string;
-  thumbnail: string;
-  tags: string[];
   createdAt: string;
-  content: string;
+  tags: string[];
+  thumbnail: string;
+  content: {
+    h1Title: string;
+    h2Sections: Array<{
+      title: string;
+      content: string;
+      images?: string[];
+      diagramData?: any;
+    }>;
+    h3Sections: Array<{
+      title: string;
+      content: string;
+      isInitialDesign?: boolean;
+    }>;
+    bodyText: string;
+    blockquote?: string;
+    smallText?: string;
+    additionalImages?: string[];
+    commentSection?: {
+      enabled: boolean;
+      sampleComments?: Array<{
+        author: string;
+        message: string;
+        timestamp: string;
+      }>;
+    };
+    conclusionTitle: string;
+    conclusionText: string;
+  };
 }
 
 interface BlogDetailPageProps {
@@ -23,29 +50,41 @@ interface BlogDetailPageProps {
 const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ params }) => {
   const router = useRouter();
   const { slug } = React.use(params); // Unwrap the params Promise
-  const [blogPost, setBlogPost] = useState<BlogPost | null>(null);
+  const [post, setBlogPost] = useState<BlogPost | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [relatedPosts, setRelatedPosts] = useState<BlogPost[] | null>(null);
+  const [allTag, setAllTag] = useState(['It Consulting', 'Design', 'Branding', 'Engineering', 'Other']);
+
+  // Get tag colors based on tag name
+  const getTagColor = (tag: string) => {
+    if (!post) return 'border border-[#B9BDC6] text-[#B9BDC6]';
+    if (post.tags.includes(tag)) {
+      return 'border border-black text-black';
+    }
+    return 'border border-[#B9BDC6] text-[#B9BDC6]';
+  };
 
   // Fetch blog post by slug
   const fetchBlogPost = async (slug: string) => {
     setLoading(true);
     setError(null);
-    
+
     try {
       console.log('Fetching blog post with slug:', slug);
       const response = await fetch(`/api/blog/${slug}`);
-      
+
       if (!response.ok) {
         if (response.status === 404) {
           throw new Error('ブログ記事が見つかりませんでした');
         }
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      
+
       const post = await response.json();
       console.log('Fetched blog post:', post);
       setBlogPost(post.data.post);
+      setRelatedPosts(post.data.relatedPosts)
     } catch (err) {
       console.error('Error fetching blog post:', err);
       setError(err instanceof Error ? err.message : 'エラーが発生しました');
@@ -54,58 +93,26 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ params }) => {
     }
   };
 
-  // Format date
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('ja-JP', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit'
-    });
-  };
-
-  // Estimate reading time
-  const estimateReadingTime = (content: string) => {
-    const wordsPerMinute = 200; // Average reading speed
-    const textLength = content.replace(/<[^>]*>/g, '').length;
-    const words = textLength / 3; // Rough estimate for Japanese characters
-    const minutes = Math.ceil(words / wordsPerMinute);
-    return minutes;
-  };
-
-  // Handle share functionality
-  const handleShare = async () => {
-    if (navigator.share && blogPost) {
-      try {
-        await navigator.share({
-          title: blogPost.title,
-          url: window.location.href
-        });
-      } catch (err) {
-        console.log('Share cancelled');
-      }
-    } else {
-      // Fallback: copy to clipboard
-      navigator.clipboard.writeText(window.location.href);
-      alert('URLをクリップボードにコピーしました');
-    }
-  };
-
   useEffect(() => {
     fetchBlogPost(slug);
   }, [slug]);
 
-  // Add this check early in your component, before the JSX return
-if (!blogPost) {
-  return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-      <div className="text-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-black mx-auto mb-4"></div>
-        <p className="text-gray-600">読み込み中...</p>
+  // Handle blog click - always navigate to blog page
+  const handleBlogClick = (slug: string) => {
+    router.push(`/blog/${slug}`);
+  };
+
+
+  if (!post) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-black mx-auto mb-4"></div>
+          <p className="text-gray-600">読み込み中...</p>
+        </div>
       </div>
-    </div>
-  );
-}
+    );
+  }
 
   if (loading) {
     return (
@@ -118,114 +125,112 @@ if (!blogPost) {
     );
   }
 
-
-
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header Navigation */}
-      <div className="bg-white shadow-sm sticky top-0 z-10">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 xl:px-4 py-4 max-w-4xl">
-          <div className="flex items-center justify-between">
-            <button
-              onClick={() => router.back()}
-              className="flex items-center text-gray-600 hover:text-black transition-colors"
-            >
-              <ArrowLeft className="w-5 h-5 mr-2" />
-              戻る
-            </button>
-            <button
-              onClick={handleShare}
-              className="flex items-center text-gray-600 hover:text-black transition-colors"
-            >
-              <Share2 className="w-5 h-5 mr-2" />
-              シェア
-            </button>
+    <div className="min-h-screen bg-[#F1F2F4] pt-[48px] px-[16px] pb-[160px] sm:px-[32px] sm:pt-[48px] sm:pb-[160px] lg:px-[80px] lg:pt-[48px] lg:pb-[160px] mt-[-20px] font-noto-sans-jp">
+      {/* Article Container */}
+      <div className="max-w-7xl mx-auto  bg-white rounded-lg">
+
+        {/* Title Section */}
+        <div className="px-4 sm:px-6 lg:px-8 py-6 md:py-8">
+          <h1 className="text-[32px] tracking-[5%] leading-[150%] sm:text-[48px]  lg:text-[48px] font-bold text-black mb-4 ">
+            {post.title}
+          </h1>
+
+          <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-2 sm:gap-3 text-xs text-gray-500 mb-6 md:mb-8">
+            <span className="shrink-0">{post.createdAt}</span>
+            <div className="flex flex-wrap gap-1">
+              {allTag.map((tag, index) => (
+                <span
+                  key={index}
+                  className={`px-2 py-1 border border-gray-300 rounded text-xs bg-white shrink-0 ${getTagColor(tag)}`}
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
           </div>
+        </div>
+
+        {/* ThumbNail */}
+        <div className="mb-6 md:mb-8">
+          <img className='w-full' srcSet={post.thumbnail} alt="" />
+        </div>
+
+        {/* blog detail */}
+        <div className='px-2 sm:px-6 '>
+          {/* Body Text */}
+          <div className="px-4 sm:px-6 lg:px-8 mb-6 md:mb-8">
+            <p className="text-black leading-[150%] tracking-[0px] font-medium text-[16px] pt-8 md:text-base">
+              {post.content.bodyText}
+            </p>
+          </div>
+
+          {/* H2 Sections */}
+          {post.content.h2Sections.map((section, index) => (
+            <div key={index} className="px-4 sm:px-6 lg:px-8 mb-8 md:mb-12">
+              {/* Section Title with Red Border */}
+              <div className="border-l-4 border-[#AD002D] pl-3 md:pl-4 mb-4 md:mb-6">
+                <h2 className="text-[24px] sm:text-[32px] lg:text-[32px] font-bold text-black leading-[150%] tracking-[5%]">
+                  {section.title}
+                </h2>
+              </div>
+
+              {/* Section Images */}
+              {section.images && section.images.map((image, imgIndex) => (
+                <div key={imgIndex} className="mb-4 md:mb-6 pt-8 sm:pt-4 lg:pt-4">
+                  <img
+                    srcSet={image}
+                    alt={section.title}
+                    className="w-full h-48 sm:h-56 md:h-64 lg:h-72 object-cover rounded-2xl"
+                  />
+                  <p className="text-xs text-gray-500 mt-2">Figmaのコンポーネント画面例</p>
+                </div>
+              ))}
+
+              <p className="text-gray-700 leading-relaxed text-sm md:text-base mb-4 md:mb-6">
+                {section.content}
+              </p>
+
+            </div>
+          ))}
+
+          {/* Conclusion Section */}
+          <div className="px-4 sm:px-6 lg:px-8 mb-8 md:mb-12">
+            <div className="border-l-4 border-red-500 pl-3 md:pl-4 mb-4 md:mb-6">
+              <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-black">
+                {post.content.conclusionTitle}
+              </h2>
+            </div>
+            <p className="text-gray-700 leading-relaxed text-sm md:text-base">
+              {post.content.conclusionText}
+            </p>
+          </div>
+          {/* Bottom Padding */}
+          <div className="h-6 md:h-8"></div>
         </div>
       </div>
 
-      <article className="container mx-auto px-4 sm:px-6 lg:px-8 xl:px-4 py-8 max-w-4xl">
-        {/* Featured Image */}
-        <div className="relative w-full h-64 md:h-80 lg:h-96 mb-8 rounded-lg overflow-hidden shadow-lg">
-          <Image
-            src={blogPost.thumbnail}
-            alt={blogPost.title}
-            fill
-            className="object-cover"
-            priority
-          />
-          
-          {/* Overlay with title for mobile */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent md:hidden">
-            <div className="absolute bottom-4 left-4 right-4">
-              <h1 className="text-white text-xl font-bold leading-tight">
-                {blogPost.title}
-              </h1>
-            </div>
-          </div>
+      <div className='pt-16'>
+        <p className='flex justify-center items-center text-[24px] font-bold tracking-[5%] leading-[150%]'>おすすめの記事</p>
+        <div className='w-full gap-6 sm:gap-5 lg:gap-6 flex flex-wrap  items-center justify-center lg:grid lg:grid-cols-3  max-w-7xl  mb-12 mt-12 mx-auto'>
+          {relatedPosts && relatedPosts.map((relatedPost) => (
+            <BlogCard
+              key={relatedPost.id}
+              {...relatedPost}
+              onClick={() => handleBlogClick(relatedPost.slug)}
+            />
+          ))}
         </div>
 
-        {/* Article Header */}
-        <header className="mb-8">
-          {/* Title (hidden on mobile, shown on desktop) */}
-          <h1 className="hidden md:block text-3xl lg:text-4xl font-bold text-gray-900 mb-6 leading-tight">
-            {blogPost.title}
-          </h1>
-
-          {/* Meta Information */}
-          <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-6">
-            <div className="flex items-center">
-              <Calendar className="w-4 h-4 mr-2" />
-              <span>{formatDate(blogPost.createdAt)}</span>
-            </div>
-            <div className="flex items-center">
-              <Clock className="w-4 h-4 mr-2" />
-              <span>{estimateReadingTime(blogPost.content)}分で読める</span>
-            </div>
-          </div>
-
-          {/* Tags */}
-          <div className="flex flex-wrap gap-2 mb-8">
-            {blogPost.tags.map((tag, index) => (
-              <span
-                key={index}
-                className="inline-block px-3 py-1 text-sm font-medium bg-blue-100 text-blue-800 rounded-full"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-        </header>
-
-        {/* Article Content */}
-        <div className="bg-white rounded-lg shadow-sm p-6 md:p-8">
-          <div 
-            className="prose prose-lg max-w-none prose-headings:text-gray-900 prose-headings:font-bold prose-p:text-gray-700 prose-p:leading-relaxed prose-a:text-blue-600 prose-a:no-underline hover:prose-a:underline prose-img:rounded-lg prose-img:shadow-md"
-            dangerouslySetInnerHTML={{ __html: blogPost.content }}
-          />
+        <div 
+        className='w-[120px] flex ml-auto cursor-pointer'
+        onClick={() => router.push('/blogs')}
+        >
+          <p className='w-full'> もっと見る</p>
+          <img className='h-full' srcSet="/arrow2.png" alt="" />
         </div>
+      </div>
 
-        {/* Bottom Navigation */}
-        <div className="mt-12 pt-8 border-t border-gray-200">
-          <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-            <button
-              onClick={() => router.push('/blog')}
-              className="flex items-center text-gray-600 hover:text-black transition-colors"
-            >
-              <ArrowLeft className="w-5 h-5 mr-2" />
-              ブログ一覧に戻る
-            </button>
-            <button
-              onClick={handleShare}
-              className="flex items-center px-4 py-2 bg-black text-white rounded hover:bg-gray-800 transition-colors"
-            >
-              <Share2 className="w-5 h-5 mr-2" />
-              この記事をシェア
-            </button>
-          </div>
-        </div>
-
-      </article>
     </div>
   );
 };

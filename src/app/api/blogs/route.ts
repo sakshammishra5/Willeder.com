@@ -1,15 +1,43 @@
 // app/api/blogs/route.ts
 import { NextRequest, NextResponse } from 'next/server';
-import { data } from '../../data/json';
+import { data } from '../../data/data';
 
+// Updated Blog Post Data Structure for Japanese Design Blog
 interface BlogPost {
   id: number;
   slug: string;
   title: string;
-  thumbnail: string;
+  createdAt: string; // Format: "YYYY.MM.DD" as shown in design
   tags: string[];
-  createdAt: string;
-  content: string;
+  thumbnail: string;
+  content: {
+    h1Title: string; // Main hero title
+    h2Sections: Array<{
+      title: string;
+      content: string;
+      images?: string[];
+      diagramData?: any; // For Auto Layout diagrams
+    }>;
+    h3Sections: Array<{
+      title: string;
+      content: string;
+      isInitialDesign?: boolean; // For styling red text
+    }>;
+    bodyText: string; // Main introductory paragraph
+    blockquote?: string;
+    smallText?: string; // For additional notes
+    additionalImages?: string[];
+    commentSection?: {
+      enabled: boolean;
+      sampleComments?: Array<{
+        author: string;
+        message: string;
+        timestamp: string;
+      }>;
+    };
+    conclusionTitle: string;
+    conclusionText: string;
+  };
 }
 
 export async function GET(request: NextRequest) {
@@ -30,8 +58,8 @@ export async function GET(request: NextRequest) {
     if (q) {
       const searchQuery = q.toLowerCase();
       filteredPosts = filteredPosts.filter(post =>
-        post.title.toLowerCase().includes(searchQuery) ||
-        post.content.toLowerCase().includes(searchQuery) ||
+        post.content.h1Title.toLowerCase().includes(searchQuery) ||
+        post.content.h2Sections[1].content.toLowerCase().includes(searchQuery) ||
         post.tags.some(tag => tag.toLowerCase().includes(searchQuery))
       );
     }

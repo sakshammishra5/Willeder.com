@@ -7,96 +7,203 @@ interface BlogPost {
   id: number;
   slug: string;
   title: string;
-  thumbnail: string;
   tags: string[];
+  thumbnail: string;
+  content: {
+    h1Title: string;
+    h2Sections: Array<{
+      title: string;
+      content: string;
+      images?: string[];
+      diagramData?: boolean;
+    }>;
+    h3Sections: Array<{
+      title: string;
+      content: string;
+      isInitialDesign?: boolean;
+    }>;
+    bodyText: string;
+    conclusionTitle: string;
+    conclusionText: string;
+  };
   createdAt: string;
-  content: string;
 }
 
-
 interface BlogCardProps extends BlogPost {
-    onClick?: () => void;
+  onClick?: () => void;
 }
 
 interface SampleBlogProps {
-    onBlogClick?: (slug: string) => void;
-    //   onViewAllClick?: () => void;
+  onBlogClick?: (slug: string) => void;
+  //   onViewAllClick?: () => void;
 }
 
 export const SampleBlog: React.FC<SampleBlogProps> = ({
-    onBlogClick = (slug: string) => console.log(`Navigate to blog: ${slug}`)
-    //   onViewAllClick = () => console.log('View all blogs')
+  onBlogClick = (slug: string) => console.log(`Navigate to blog: ${slug}`)
+  //   onViewAllClick = () => console.log('View all blogs')
 }) => {
-    // Sample blog data matching the design
-    const router = useRouter();
-    
- onBlogClick = (slug: string) => {
+  // Sample blog data matching the design
+  const router = useRouter();
+
+  onBlogClick = (slug: string) => {
     router.push(`/blog/${slug}`);
   }
 
   const blogPosts: BlogPost[] = [
     {
-            "id": 1,
-            "slug": "figma-web-design-fundamentals",
-            "title": "Figmaで始めるWebデザインの基礎：効率的なワークフローを構築する方法",
-            "createdAt": "2024-12-15T09:00:00Z",
-            "tags": ["Design", "Figma", "Web Design", "UI/UX"],
-            "thumbnail": "https://images.unsplash.com/photo-1609921141835-710b7fa6e438?w=800&h=450&fit=crop",
-            "content": "<h2>Figmaがもたらすデザインワークフローの革新</h2><p>現代のWebデザインにおいて、Figmaは単なるデザインツールを超えた存在となっています。チーム全体でのコラボレーションを可能にし、デザインシステムの構築から開発者との連携まで、一貫したワークフローを提供します。</p><img src=\"https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=600&h=300&fit=crop\" alt=\"Figmaインターフェース\" /><h2>効率的なコンポーネント設計のベストプラクティス</h2><p>Figmaでのコンポーネント作成において最も重要なのは、再利用性と拡張性を念頭に置いた設計です。バリエーション機能を活用することで、ボタンの状態管理やテーマカラーの切り替えが簡単になります。プロパティパネルを適切に設定することで、デザイナーと開発者の間のコミュニケーションコストを大幅に削減できます。</p><p>また、Auto Layoutを効果的に使用することで、レスポンシブデザインの基礎を Figma 上で構築できます。これにより、実装フェーズでの手戻りを最小限に抑えることができるのです。</p>"
+    "id": 1,
+    "slug": "responsive-design-mobile-first",
+    "title": "モバイルファーストで始めるレスポンシブデザイン完全ガイド",
+    "createdAt": "2023.07.15",
+    "tags": ["Design", "Engineering"],
+    "thumbnail": "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=800&h=450&fit=crop",
+    "content": {
+      "h1Title": "モバイルファースト設計で\n成功するWebサイトを作る方法",
+      "h2Sections": [
+        {
+          "title": "なぜモバイルファーストが重要なのか",
+          "content": "現代のWebトラフィックの60%以上がモバイルデバイスからアクセスされています。モバイルファースト設計は、小さな画面から始めて段階的に大きな画面に対応していく手法で、パフォーマンスと使いやすさを両立できます。この手法により、コンテンツの優先順位が明確になり、本当に必要な要素だけを残したミニマルなデザインが実現できます。",
+          "images": ["https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=800&h=500&fit=crop"]
         },
         {
-            "id": 2,
-            "slug": "ui-ux-business-impact-analysis",
-            "title": "UI/UXがビジネスに与える実際のインパクト：データで見る改善効果",
-            "createdAt": "2024-12-10T14:30:00Z",
-            "tags": ["UI/UX", "Business", "Analytics", "Conversion"],
-            "thumbnail": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=450&fit=crop",
-            "content": "<h2>UI/UX改善がコンバージョン率に与える具体的効果</h2><p>近年の調査によると、優れたUI/UXデザインは平均して20-25%のコンバージョン率向上をもたらします。特にEコマースサイトにおいて、チェックアウトプロセスの簡略化だけで売上が15%向上したケースもあります。</p><img src=\"https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=300&fit=crop\" alt=\"ユーザーエクスペリエンス分析\" /><h2>ユーザビリティテストで明らかになった改善ポイント</h2><p>実際のユーザビリティテストを通じて、多くの企業が見落としがちな問題点が浮き彫りになります。例えば、モバイルでのタップ領域の最適化により、操作完了率が30%向上した事例があります。また、情報アーキテクチャの見直しにより、ユーザーの目標達成時間を平均40秒短縮できました。</p><p>これらの改善は、単純なデザインの美しさではなく、ユーザーの行動パターンと心理的な負荷を理解した上での戦略的なアプローチの結果です。データドリブンなデザイン改善こそが、持続可能なビジネス成長を支える基盤となるのです。</p>"
+          "title": "構造化データとセマンティックマークアップ",
+          "content": "検索エンジンがWebサイトのコンテンツを正確に理解するため、JSON-LD形式による構造化データの実装が重要です。パンくずリスト、記事、商品、組織情報など、コンテンツタイプに応じた適切なSchema.orgマークアップを実装します。また、セマンティックHTMLによる文書構造の最適化により、検索エンジンクローラーの理解を促進し、リッチスニペットの表示機会を増やします。",
+          "images": [],
+          "diagramData": true
         },
         {
-            "id": 3,
-            "slug": "cloud-architecture-modern-web-systems",
-            "title": "クラウドネイティブなWebシステム構築：AWS、Azure、GCPの比較検討",
-            "createdAt": "2024-12-08T11:15:00Z",
-            "tags": ["Cloud", "AWS", "Azure", "GCP", "Architecture"],
-            "thumbnail": "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&h=450&fit=crop",
-            "content": "<h2>3大クラウドプロバイダーの特徴と選択基準</h2><p>現代のWebシステム開発において、適切なクラウドプロバイダーの選択は成功の鍵を握ります。AWS、Azure、GCPそれぞれが持つ独自の強みを理解し、プロジェクトの要件に最適な選択を行うことが重要です。</p><img src=\"https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=600&h=300&fit=crop\" alt=\"クラウドインフラストラクチャ\" /><h2>コスト効率と拡張性のバランス</h2><p>AWSは豊富なサービスラインナップと成熟したエコシステムが魅力ですが、コストの複雑さが課題となる場合があります。一方、Azureは既存のMicrosoft環境との親和性が高く、企業システムとの統合がスムーズです。GCPはGoogleの技術力を活かした機械学習サービスとビッグデータ処理に強みを持ちます。</p><p>実際の運用では、マルチクラウド戦略を採用する企業も増えており、各プロバイダーの得意分野を組み合わせることで、最適なパフォーマンスとコスト効率を実現しています。重要なのは、長期的な視点でのTCO（総所有コスト）を考慮した意思決定です。</p>"
+          "title": "クロール最適化とサイトマップ戦略",
+          "content": "検索エンジンクローラーが効率的にサイトを巡回できるよう、内部リンク構造の最適化、robots.txtの適切な設定、XMLサイトマップの生成と管理を行います。重要なページへのクロールバジェットを適切に配分し、不要なページのインデックスを防ぐことで、検索エンジンからの評価を向上させます。また、ページネーションやAJAXコンテンツの適切な処理についても解説します。",
+          "images": []
         }
+      ],
+      "h3Sections": [
+        {
+          "title": "モニタリングと継続的改善",
+          "content": "Google Search Console、Google Analytics、各種SEOツールを活用した継続的な監視体制を構築し、データドリブンなSEO最適化を実現します。",
+          "isInitialDesign": true
+        }
+      ],
+      "bodyText": "テクニカルSEOは、コンテンツSEOと並んで検索順位向上に不可欠な要素です。検索エンジンがWebサイトを正確に理解し、ユーザーに適切に表示するための技術的最適化手法を実践的に学びましょう。",
+      "conclusionTitle": "まとめ",
+      "conclusionText": "テクニカルSEOの実装により、優れたコンテンツを検索エンジンに正しく評価してもらうことができます。継続的な監視と改善により、持続的な検索順位向上とオーガニックトラフィックの増加を実現できます。"
+    }
+  },
+  {
+    "id": 9,
+    "slug": "design-system-component-library",
+    "title": "デザインシステム構築でチーム開発を効率化する方法",
+    "createdAt": "2023.09.15",
+    "tags": ["Design", "Engineering"],
+    "thumbnail": "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=800&h=450&fit=crop",
+    "content": {
+      "h1Title": "統一されたデザインシステムで\nチームの生産性を向上させる",
+      "h2Sections": [
+        {
+          "title": "デザイントークンによる一貫性の確保",
+          "content": "デザインシステムの基盤となるデザイントークンは、色、タイポグラフィ、スペーシング、アニメーションなどの基本的なデザイン要素を標準化します。これらのトークンをJSON形式で管理し、デザインツールと開発環境の両方で同期することで、一貫性のあるブランド表現を実現します。Figma、Sketch、Adobe XDなどのデザインツールから、React、Vue、Angularなどの開発フレームワークまで、ツール間の連携方法を詳しく解説します。",
+          "images": ["https://images.unsplash.com/photo-1558655146-d09347e92766?w=800&h=500&fit=crop"]
+        },
+        {
+          "title": "コンポーネントライブラリの設計と実装",
+          "content": "再利用可能なUIコンポーネントは、開発効率とデザイン品質の向上に直結します。Atomic Designの原則に基づき、Atoms、Molecules、Organisms、Templates、Pagesの階層でコンポーネントを整理します。各コンポーネントには、バリエーション、状態、プロパティを明確に定義し、Storybookなどのツールを使用したドキュメント化により、チーム全体での理解と活用を促進します。",
+          "images": [],
+          "diagramData": true
+        },
+        {
+          "title": "ガバナンスと継続的な運用",
+          "content": "デザインシステムの成功には、適切なガバナンス体制と継続的な改善プロセスが不可欠です。コンポーネントの追加・変更プロセス、品質基準、レビュー体制を確立し、システムの一貫性を保ちながら進化させます。また、使用状況の監視、フィードバック収集、定期的な見直しにより、実際の開発ニーズに適応したシステムを維持します。",
+          "images": []
+        }
+      ],
+      "h3Sections": [
+        {
+          "title": "ツールチェーンの構築",
+          "content": "デザインシステムの効率的な運用には、デザイン、開発、テスト、デプロイメントを支援する適切なツールチェーンの構築が重要です。",
+          "isInitialDesign": true
+        }
+      ],
+      "bodyText": "デザインシステムは、大規模なプロダクト開発において一貫性と効率性を両立する重要な基盤です。デザイナーと開発者が協力し、スケーラブルで保守性の高いデザインシステムを構築・運用する方法を体系的に学びましょう。",
+      "conclusionTitle": "まとめ",
+      "conclusionText": "効果的なデザインシステムの構築により、チーム全体の生産性向上と品質の一貫性を実現できます。継続的な改善と適切なガバナンスにより、組織の成長に合わせて進化するデザインシステムを構築できます。"
+    }
+  },
+  {
+    "id": 10,
+    "slug": "api-design-restful-best-practices",
+    "title": "RESTful API設計のベストプラクティスと実装ガイド",
+    "createdAt": "2023.09.22",
+    "tags": ["Engineering", "It Consulting"],
+    "thumbnail": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&h=450&fit=crop",
+    "content": {
+      "h1Title": "スケーラブルで保守性の高い\nAPI設計の実現方法",
+      "h2Sections": [
+        {
+          "title": "RESTアーキテクチャの原則と実装",
+          "content": "RESTful APIの設計には、統一インターフェース、ステートレス、キャッシュ可能性、階層システムなどの基本原則の理解が重要です。適切なHTTPメソッドの使用、リソース指向のURL設計、ステータスコードの適切な返却により、直感的で一貫性のあるAPIを構築します。また、HATEOASによるハイパーメディア制約の実装についても、実用的な観点から解説します。",
+          "images": ["https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&h=500&fit=crop"]
+        },
+        {
+          "title": "認証・認可とセキュリティ対策",
+          "content": "API のセキュリティは、現代のWebアプリケーションにおいて最重要事項の一つです。JWT による認証、OAuth 2.0 による認可、CORS の適切な設定、Rate Limiting による悪用防止など、多層的なセキュリティ対策を実装します。また、HTTPS の強制、入力値検証、SQLインジェクション対策など、基本的なセキュリティ原則についても詳しく解説します。",
+          "images": [],
+          "diagramData": true
+        },
+        {
+          "title": "バージョニングとドキュメント管理",
+          "content": "API の長期的な運用には、適切なバージョニング戦略とドキュメント管理が不可欠です。URL パス、ヘッダー、クエリパラメータによるバージョニング手法の比較検討、後方互換性の維持、段階的な廃止プロセスを実装します。OpenAPI（Swagger）による自動ドキュメント生成、対話的なAPI探索環境の構築により、開発者体験の向上を図ります。",
+          "images": []
+        }
+      ],
+      "h3Sections": [
+        {
+          "title": "テスト戦略と品質保証",
+          "content": "APIの品質を保証するため、単体テスト、統合テスト、契約テストを含む包括的なテスト戦略を策定し、継続的インテグレーションと連携した自動化を実現します。",
+          "isInitialDesign": true
+        }
+      ],
+      "bodyText": "RESTful API設計は、現代のWebアプリケーション開発における中核技術です。フロントエンドとバックエンドを疎結合で接続し、マイクロサービスアーキテクチャの基盤となる、高品質なAPIの設計・実装方法を詳しく学びましょう。",
+      "conclusionTitle": "まとめ",
+      "conclusionText": "優れたRESTful API設計により、スケーラブルで保守性の高いWebアプリケーションを構築できます。適切な設計原則、セキュリティ対策、ドキュメント管理により、開発者とユーザーの両方に価値を提供するAPIを実現できます。"
+    }
+  }
   ];
 
   return (
-    <section className="py-16 bg-gray-50">
-      <div className="container mx-auto px-6">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">ブログ</h2>
-          <div className="w-24 h-0.5 bg-gray-300 mx-auto mb-2"></div>
-          <p className="text-sm text-gray-500 uppercase tracking-wider">BLOG</p>
-        </div>
+<section className="flex flex-col items-center bg-gray-50 w-full pt-24 px-4 pb-16 sm:pt-24 sm:px-6 sm:pb-16 lg:pt-24 lg:px-20 lg:pb-16">
 
-        {/* Blog Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-          {blogPosts.map((post) => (
-            <BlogCard
-              key={post.id}
-              {...post}
-              onClick={() => onBlogClick(post.slug)}
-            />
-          ))}
-        </div>
+  {/* Header */}
+  <div className="text-center mb-12 relative w-full max-w-7xl">
+    <h2 className="mx-auto w-full h-[48px] text-[32px] font-bold tracking-[5%] leading-[150%] text-gray-900 mb-2">ブログ</h2>
+    <div className='w-full flex items-center justify-center gap-[10px]'>
+      <div className='w-full h-[1px] bg-black border border-black'></div>
+      <p className="text-xl font-medium tracking-[5%] leading-[150%]">BLOG</p>
+      <div className='w-full h-[1px] bg-black border border-black'></div>
+    </div>
+  </div>
 
-        {/* View All Button */}
-        <div className="text-center">
-          <button
-            // onClick={onViewAllClick}
-            className="group inline-flex items-center gap-2 text-gray-700 hover:text-blue-600 font-medium transition-colors"
-          >
-            もっと見る
-            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-          </button>
-        </div>
+  {/* Blog Grid */}
+  <div className="w-full grid grid-cols-1 place-items-center sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 lg:gap-6 max-w-7xl mb-12">
+    {blogPosts.map((post) => (
+      <BlogCard
+        key={post.id}
+        {...post}
+        onClick={() => onBlogClick(post.slug)}
+      />
+    ))}
+  </div>
+
+  {/* View All Button */}
+  <div className="ml-auto cursor-pointer" onClick={() => router.push('/blogs')}>
+    <div className='flex gap-4  items-center justify-center h-[34px] font-noto-sans-jp font-bold cursor-pointer tracking-[5%] leading-[150%]'>
+      <p className='w-full  hover:text-[#AD002D]'>もっと見る</p>
+      <div>
+        <img className='h-full hover:text-[#AD002D]' srcSet="/arrow2.png" alt="" />
       </div>
-    </section>
+    </div>
+  </div>
+
+</section>
   );
 };
 

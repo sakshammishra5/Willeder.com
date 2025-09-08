@@ -6,7 +6,9 @@ import React, { useState } from 'react';
 interface FormData {
   name: string;
   email: string;
+  phone: string;
   message: string;
+  privacyAgreed: boolean;
   honeypot: string; // Bot protection
 }
 
@@ -19,7 +21,9 @@ const ContactPage = () => {
   const [formData, setFormData] = useState<FormData>({
     name: '',
     email: '',
+    phone: '',
     message: '',
+    privacyAgreed: false,
     honeypot: ''
   });
 
@@ -29,16 +33,18 @@ const ContactPage = () => {
   });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
+    const { name, value, type } = e.target;
+    const checked = (e.target as HTMLInputElement).checked;
+
     setFormData(prev => ({
       ...prev,
-      [name]: value
+      [name]: type === 'checkbox' ? checked : value
     }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Honeypot check - if filled, it's likely a bot
     if (formData.honeypot) {
       setStatus({
@@ -57,6 +63,14 @@ const ContactPage = () => {
       return;
     }
 
+    if (!formData.privacyAgreed) {
+      setStatus({
+        type: 'error',
+        message: 'プライバシーポリシーに同意してください。'
+      });
+      return;
+    }
+
     setStatus({ type: 'loading', message: '送信中...' });
 
     try {
@@ -68,6 +82,7 @@ const ContactPage = () => {
         body: JSON.stringify({
           name: formData.name.trim(),
           email: formData.email.trim(),
+          phone: formData.phone.trim(),
           message: formData.message.trim()
         }),
       });
@@ -83,7 +98,9 @@ const ContactPage = () => {
         setFormData({
           name: '',
           email: '',
+          phone: '',
           message: '',
+          privacyAgreed: false,
           honeypot: ''
         });
       } else {
@@ -101,34 +118,31 @@ const ContactPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 py-8 px-4 sm:py-12 sm:px-6 lg:py-16 lg:px-8">
-      <div className="max-w-2xl mx-auto">
+    <div className="min-h-screen bg-white pt-24 pb-40 px-4 sm:pt-24 sm:pb-40 sm:px-6 lg:p-26 lg:pb-40 lg:px-20">
+      <div className="max-w-7xl mx-auto">
         {/* Header Section */}
-        <div className="bg-white border-2 border-dashed border-blue-300 rounded-lg p-4 sm:p-6 mb-6 text-center">
-          <h1 className="text-xl sm:text-2xl font-bold text-gray-800 mb-2">
+        <div className="text-center mb-8">
+          <h1 className="text-xl font-medium text-gray-900 mb-1">
             お問い合わせ
           </h1>
-          <div className="flex items-center justify-center">
-            <div className="flex-1 h-px bg-blue-300"></div>
-            <p className="px-4 text-xs sm:text-sm text-gray-600 uppercase tracking-widest">
-              CONTACT
-            </p>
-            <div className="flex-1 h-px bg-blue-300"></div>
+          <div className="flex items-center justify-center mb-4">
+            <div className='w-full h-[1px] bg-black border border-black'></div>
+            <p className="text-xl font-medium tracking-[5%] leading-[150%]">Contact</p>
+            <div className='w-full h-[1px] bg-black border border-black'></div>
           </div>
         </div>
 
         {/* Form Section */}
-        <div className="bg-gray-100 border-2 border-dashed border-blue-300 rounded-lg p-4 sm:p-6 lg:p-8">
+        <div className="bg-gray-100 py-[100px] px-2 rounded-2xl lg:p-[100px] sm:py-[100px] sm:px-[24px] font-noto-sans-jp font-semibold text-[20px] lg:text-[24px] sm:text-[24px] tracking-[0%] leading-[100%]">
           {/* Status Message */}
           {status.type !== 'idle' && (
             <div
-              className={`mb-6 p-4 rounded-md text-sm ${
-                status.type === 'success'
+              className={`mb-6 p-4 rounded text-sm ${status.type === 'success'
                   ? 'bg-green-50 text-green-800 border border-green-200'
                   : status.type === 'error'
-                  ? 'bg-red-50 text-red-800 border border-red-200'
-                  : 'bg-blue-50 text-blue-800 border border-blue-200'
-              }`}
+                    ? 'bg-red-50 text-red-800 border border-red-200'
+                    : 'bg-blue-50 text-blue-800 border border-blue-200'
+                }`}
               role="alert"
               aria-live="polite"
             >
@@ -153,8 +167,8 @@ const ContactPage = () => {
 
             {/* Name Field */}
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-                お名前 <span className="text-red-500" aria-label="必須">*</span>
+              <label htmlFor="name" className="block text-sm text-gray-700 mb-2">
+                お名前<span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
@@ -165,16 +179,15 @@ const ContactPage = () => {
                 placeholder="お名前をご入力ください"
                 required
                 aria-required="true"
-                aria-describedby="name-error"
-                className="w-full px-3 py-2.5 sm:py-3 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm sm:text-base"
+                className="w-full px-3 py-2.5 bg-white border border-gray-300 rounded text-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-gray-400"
                 disabled={status.type === 'loading'}
               />
             </div>
 
             {/* Email Field */}
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                メールアドレス <span className="text-red-500" aria-label="必須">*</span>
+              <label htmlFor="email" className="block text-sm text-gray-700 mb-2">
+                メールアドレス<span className="text-red-500">*</span>
               </label>
               <input
                 type="email"
@@ -185,30 +198,62 @@ const ContactPage = () => {
                 placeholder="メールアドレスをご入力ください"
                 required
                 aria-required="true"
-                aria-describedby="email-error"
-                className="w-full px-3 py-2.5 sm:py-3 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm sm:text-base"
+                className="w-full px-3 py-2.5 bg-white border border-gray-300 rounded text-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-gray-400"
+                disabled={status.type === 'loading'}
+              />
+            </div>
+
+            {/* Phone Field */}
+            <div>
+              <label htmlFor="phone" className="block text-sm text-gray-700 mb-2">
+                電話番号<span className="text-red-500">*</span>
+              </label>
+              <input
+                type="tel"
+                id="phone"
+                name="phone"
+                value={formData.phone}
+                onChange={handleInputChange}
+                placeholder="電話番号をご入力ください"
+                className="w-full px-3 py-2.5 bg-white border border-gray-300 rounded text-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-gray-400"
                 disabled={status.type === 'loading'}
               />
             </div>
 
             {/* Message Field */}
             <div>
-              <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
-                お問い合わせ内容 <span className="text-red-500" aria-label="必須">*</span>
+              <label htmlFor="message" className="block text-sm text-gray-700 mb-2">
+                お問い合わせ内容<span className="text-red-500">*</span>
               </label>
               <textarea
                 id="message"
                 name="message"
-                rows={6}
+                rows={5}
                 value={formData.message}
                 onChange={handleInputChange}
                 placeholder="お問い合わせ内容をご入力ください"
                 required
                 aria-required="true"
-                aria-describedby="message-error"
-                className="w-full px-3 py-2.5 sm:py-3 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-vertical text-sm sm:text-base"
+                className="w-full px-3 py-2.5 bg-white border border-gray-300 rounded text-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-gray-400 resize-vertical"
                 disabled={status.type === 'loading'}
               />
+            </div>
+
+            {/* Privacy Policy Checkbox */}
+            <div className="flex items-start">
+              <input
+                type="checkbox"
+                id="privacyAgreed"
+                name="privacyAgreed"
+                checked={formData.privacyAgreed}
+                onChange={handleInputChange}
+                required
+                className="mt-1 h-4 w-4 text-red-600 border-gray-300 rounded focus:ring-red-500"
+                disabled={status.type === 'loading'}
+              />
+              <label htmlFor="privacyAgreed" className="ml-2 text-sm text-gray-700">
+                プライバシーポリシーに同意する
+              </label>
             </div>
 
             {/* Submit Button */}
@@ -217,8 +262,7 @@ const ContactPage = () => {
                 type="button"
                 onClick={handleSubmit}
                 disabled={status.type === 'loading'}
-                className="inline-flex items-center px-8 py-3 sm:px-12 sm:py-4 bg-red-600 text-white text-sm sm:text-base font-medium rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                aria-describedby="submit-status"
+                className="inline-flex items-center px-8 py-3 bg-red-600 text-white text-sm font-medium rounded hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {status.type === 'loading' ? (
                   <>
@@ -230,22 +274,15 @@ const ContactPage = () => {
                   </>
                 ) : (
                   <>
-                    送信する
-                    <svg className="ml-2 w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
+                    詳細確認へ
+                    <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
                   </>
                 )}
               </button>
             </div>
           </div>
-        </div>
-
-        {/* Additional Info */}
-        <div className="mt-6 text-center">
-          <p className="text-xs sm:text-sm text-gray-500">
-            お問い合わせいただいた内容につきましては、2営業日以内にご返信いたします。
-          </p>
         </div>
       </div>
     </div>

@@ -24,7 +24,7 @@ const BlogsPageContent: React.FC = () => {
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [availableTags, setAvailableTags] = useState<string[]>(['ALL']);
+  const [availableTags, setAvailableTags] = useState<string[]>(['ALL','It Consulting','Design','Branding','Engineering','Other']);
 
   // Get initial values from URL params
   useEffect(() => {
@@ -77,8 +77,8 @@ const BlogsPageContent: React.FC = () => {
       if (Array.isArray(result)) {
         setBlogPosts(result);
         // Extract unique tags for filter
-        const allTags = Array.from(new Set(result.flatMap((post: BlogPost) => post.tags)));
-        setAvailableTags(['ALL', ...allTags]);
+        // const allTags = Array.from(new Set(result.flatMap((post: BlogPost) => post.tags)));
+        // setAvailableTags(['ALL', ...allTags]);
       } else if (result.data) {
         setBlogPosts(result.data);
         // Fetch all available tags separately
@@ -138,6 +138,7 @@ const BlogsPageContent: React.FC = () => {
 
   // Handle search
   const handleSearch = () => {
+    if (searchTerm==="") return;
     console.log('Searching for:', searchTerm);
     setSelectedTag('ALL');
     updateFiltersAndFetch('ALL', searchTerm);
@@ -178,35 +179,36 @@ const BlogsPageContent: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 xl:px-4 py-16 max-w-7xl">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">ブログ</h1>
-          <div className="w-24 h-0.5 bg-gray-300 mx-auto mb-2"></div>
-          <p className="text-sm text-gray-500 uppercase tracking-wider">BLOG</p>
-          {blogPosts.length > 0 && (
-            <p className="text-sm text-gray-600 mt-2">
-              {blogPosts.length}件の記事が見つかりました
-            </p>
-          )}
+      {/* Header */}
+      <div className="text-center mb-12 relative w-full max-w-7xl">
+        <h2 className="mx-auto w-full h-[48px] text-[32px] font-bold tracking-[5%] leading-[150%] text-gray-900 mb-2">ブログ</h2>
+        <div className='w-full flex items-center justify-center gap-[10px]'>
+          <div className='w-full h-[1px] bg-black border border-black'></div>
+          <p className="text-xl font-medium  tracking-[5%] leading-[150%]">BLOG</p>
+          <div className='w-full h-[1px] bg-black border border-black '></div>
         </div>
+      </div>
 
         {/* Search and Filter Section */}
         <div className="mb-8 space-y-4">
           {/* Search Bar */}
-          <div className="relative max-w-md mx-auto">
+          <div className="relative w-full lg:w-[753px] sm:w-full  mx-auto">
             <input
               type="text"
-              placeholder="キーワードを入力 (タイトル、内容、タグを検索)"
+              placeholder="キーワードを入力"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               onKeyPress={handleKeyPress}
-              className="w-full pl-4 pr-12 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
+              className="w-full pl-4 pr-12 py-3 bg-[#F2F4F1] border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent "
             />
             <button 
               onClick={handleSearch}
               className="absolute right-0 top-0 h-full px-4 bg-black text-white rounded-r-lg hover:bg-gray-800 transition-colors"
             >
+              <div className='flex gap-2 items-center justify-center py-[10px] px-4'>
+              検索
               <Search className="w-5 h-5" />
+              </div>
             </button>
           </div>
 
@@ -216,10 +218,10 @@ const BlogsPageContent: React.FC = () => {
               <button
                 key={tag}
                 onClick={() => handleTagChange(tag)}
-                className={`px-3 py-1 text-sm font-medium rounded border transition-colors ${
+                className={`px-3 py-1 text-sm font-jost tracking-[10%]  font-medium rounded border transition-colors ${
                   selectedTag === tag
-                    ? 'bg-black text-white border-black'
-                    : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                    ? 'bg-white text-black border-black'
+                    : 'bg-white text-[#B9BDC6] border-[#B9BDC6] hover:bg-gray-50'
                 }`}
               >
                 {tag}
@@ -252,7 +254,7 @@ const BlogsPageContent: React.FC = () => {
 
         {/* Blog Grid */}
         {!loading && (
-          <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-6 grid-cols-1 place-self-center sm:grid-cols-2 lg:grid-cols-3">
             {blogPosts.map((post) => (
               <BlogCard
                 key={post.id}
