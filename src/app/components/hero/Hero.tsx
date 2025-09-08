@@ -46,7 +46,7 @@ export const Hero: React.FC<HeroProps> = ({
         {/* Animated Illustration */}
         <div className="relative flex items-center justify-center ">
           <img
-            src="https://pertomdigital.co.ke/wp-content/uploads/2022/06/91030-deal-animation-by-itoolkr.gif"
+            src="/Group.png"
             alt="Deal Animation"
             className="w-full max-w-lg h-auto object-contain"
             loading="eager"
@@ -68,7 +68,7 @@ export const Hero: React.FC<HeroProps> = ({
         {/* Animated Illustration */}
         <div className="w-[343px] h-[372.5px] sm:w-[720px] sm:h-[781.92px] relative flex items-center justify-center  max-w-md">
           <img
-            src="https://pertomdigital.co.ke/wp-content/uploads/2022/06/91030-deal-animation-by-itoolkr.gif"
+            src="/Group.png"
             alt="Deal Animation"
             className="w-full h-auto object-contain"
             loading="eager"
