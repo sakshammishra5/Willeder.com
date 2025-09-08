@@ -194,9 +194,9 @@ export const SampleBlog: React.FC<SampleBlogProps> = ({
   <div className="ml-auto cursor-pointer" onClick={() => router.push('/blogs')}>
     <div className='flex gap-4  items-center justify-center h-[34px] font-noto-sans-jp font-bold cursor-pointer tracking-[5%] leading-[150%]'>
       <p className='w-full  hover:text-[#AD002D]'>もっと見る</p>
-      <div>
+      <span className='w-[34px] h-[24px]'>
         <Image width={100} height={100} className='h-full hover:text-[#AD002D]' src="/arrow2.png" alt="" />
-      </div>
+      </span>
     </div>
   </div>
 
