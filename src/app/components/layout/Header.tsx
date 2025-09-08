@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { cn } from '@/lib/utils';
+import Image from 'next/image'
 // import { Button } from '@/app/components/ui/Button';
 
 export function Header() {
@@ -37,7 +37,7 @@ export function Header() {
         <div className="w-full h-full flex items-center justify-between min-h-[64px] lg:min-h-[64px]">
           {/* Logo - Always on the left */}
           <Link href="/" className="flex items-center space-x-2 flex-shrink-0 pl-4">
-            <img srcSet="https://www.willeder.com/assets/image/willeder-logo.svg" alt="" />
+            <Image width={100} height={100} src="https://www.willeder.com/assets/image/willeder-logo.svg" alt="" />
           </Link>
 
           {/* Desktop Navigation - All items on the right */}
@@ -54,7 +54,7 @@ export function Header() {
               >
                 お問い合わせ
                 <span className="ml-2 w-[34px] h-[24px]">
-                  <img className='w-full h-full' srcSet="/arrow_1.png" alt="" />
+                  <Image width={100} height={100} className='w-full h-full' src="/arrow_1.png" alt="" />
                 </span>
               </button>
             </Link>
@@ -75,7 +75,7 @@ export function Header() {
                 >
                   お問い合わせ
                   <span className="ml-2 w-[34px] h-[24px]">
-                    <img className='w-full h-full' srcSet="/arrow_1.png" alt="" />
+                    <Image width={100} height={100} className='w-full h-full' src="/arrow_1.png" alt="" />
                   </span>
                 </button>
               </Link>
@@ -110,7 +110,7 @@ export function Header() {
           {/* Header with logo and close button */}
           <div className="flex items-center justify-between px-4 py-4 border-b border-gray-200">
             <Link href="/" className="flex items-center space-x-2">
-              <img srcSet="https://www.willeder.com/assets/image/willeder-logo.svg" alt="" />
+              <Image src="https://www.willeder.com/assets/image/willeder-logo.svg" alt="" />
             </Link>
 
             <button

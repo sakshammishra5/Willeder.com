@@ -1,9 +1,8 @@
 "use client";
 import { BlogCard } from '@/app/components/blog/BlogCard';
-import { SampleBlog } from '@/app/components/sampleBlog/SampleBlog';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
-
+import Image from 'next/image'
 interface BlogPost {
   id: number;
   slug: string;
@@ -153,7 +152,7 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ params }) => {
 
         {/* ThumbNail */}
         <div className="mb-6 md:mb-8">
-          <img className='w-full' srcSet={post.thumbnail} alt="" />
+          <Image width={100} height={100} className='w-full' src={post.thumbnail} alt="" />
         </div>
 
         {/* blog detail */}
@@ -178,8 +177,10 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ params }) => {
               {/* Section Images */}
               {section.images && section.images.map((image, imgIndex) => (
                 <div key={imgIndex} className="mb-4 md:mb-6 pt-8 sm:pt-4 lg:pt-4">
-                  <img
-                    srcSet={image}
+                  <Image
+                    width={100}
+                    height={100}
+                    src={image}
                     alt={section.title}
                     className="w-full h-48 sm:h-56 md:h-64 lg:h-72 object-cover rounded-2xl"
                   />
@@ -227,7 +228,7 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ params }) => {
         onClick={() => router.push('/blogs')}
         >
           <p className='w-full'> もっと見る</p>
-          <img className='h-full' srcSet="/arrow2.png" alt="" />
+          <Image width={100} height={100} className='h-full' src="/arrow2.png" alt="" />
         </div>
       </div>
 

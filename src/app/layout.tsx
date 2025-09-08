@@ -3,19 +3,20 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Header } from "./components/layout/Header";
 import { Footer } from "./components/layout/Footer";
-import { Container } from "./components/layout/Container";
 import { PageWrapper } from "./components/PageWrapper/PageWrapper";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
-  display: "swap", // Critical for performance
+  display: "swap",
+  preload: true, // Critical for LCP
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
   display: "swap",
+  preload: false, // Only preload if used above fold
 });
 
 export const metadata: Metadata = {
@@ -31,66 +32,138 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        {/* System fonts first for instant rendering */}
+        {/* Critical CSS inlined for immediate render */}
         <style dangerouslySetInnerHTML={{
           __html: `
-            /* Critical: System font stack for instant render */
-            :root {
-              --font-primary: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-              --font-japanese: 'Hiragino Sans', 'Yu Gothic UI', 'Meiryo UI', system-ui, sans-serif;
+            /* Critical above-the-fold styles */
+            * {
+              box-sizing: border-box;
+              margin: 0;
+              padding: 0;
+            }
+            
+            html {
+              font-size: 16px;
+              line-height: 1.5;
+              -webkit-text-size-adjust: 100%;
             }
             
             body {
-              font-family: var(--font-primary);
+              font-family: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
               font-display: swap;
+              background: #fff;
+              color: #000;
+              min-height: 100vh;
+            }
+            
+            /* Header critical styles (assuming it's above fold) */
+            header {
+              display: block;
+              width: 100%;
+            }
+            
+            /* Main content container */
+            main {
+              display: block;
+              width: 100%;
+            }
+            
+            /* Hide content until fonts load to prevent FOUT */
+            .font-loading {
+              visibility: hidden;
+            }
+            
+            .fonts-loaded .font-loading {
+              visibility: visible;
             }
             
             /* Japanese text optimization */
             [lang="ja"], .japanese {
-              font-family: var(--font-japanese);
+              font-family: 'Hiragino Sans', 'Yu Gothic UI', 'Meiryo UI', system-ui, sans-serif;
             }
             
-            /* Progressive enhancement classes */
+            /* Progressive font enhancement */
             .fonts-loaded .font-jost {
-              font-family: 'Jost', var(--font-primary);
+              font-family: 'Jost', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
             }
             
             .fonts-loaded .font-noto {
-              font-family: 'Noto Sans JP', var(--font-japanese);
+              font-family: 'Noto Sans JP', 'Hiragino Sans', 'Yu Gothic UI', system-ui, sans-serif;
+            }
+            
+            /* Loading state optimization */
+            @media (max-width: 768px) {
+              body {
+                font-size: 14px;
+              }
             }
           `
         }} />
         
-        {/* Load Google Fonts asynchronously only on fast connections */}
+        {/* Preload critical resources */}
+        <link rel="preload" href="/fonts/critical.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+        
+        {/* Resource hints for better loading */}
+        <link rel="dns-prefetch" href="//fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        
+        {/* Load non-critical CSS asynchronously */}
         <script dangerouslySetInnerHTML={{
           __html: `
-            // Progressive font loading based on connection speed
-            if ('connection' in navigator) {
+            // Mark as font loading initially
+            document.documentElement.classList.add('font-loading');
+            
+            // Connection-aware font loading
+            function shouldLoadFonts() {
+              if (!('connection' in navigator)) return true;
               const conn = navigator.connection;
-              // Only load custom fonts on fast connections
-              if (!conn || conn.effectiveType === '4g' || conn.downlink > 1.5) {
-                loadFonts();
-              }
-            } else {
-              // Fallback: load fonts after initial render
-              setTimeout(loadFonts, 100);
+              return !conn || conn.effectiveType === '4g' || conn.downlink > 2;
             }
             
-            function loadFonts() {
+            // Load fonts based on connection
+            if (shouldLoadFonts()) {
               const link = document.createElement('link');
               link.rel = 'stylesheet';
               link.href = 'https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap';
+              link.media = 'print';
               link.onload = function() {
+                this.media = 'all';
                 document.documentElement.classList.add('fonts-loaded');
+                document.documentElement.classList.remove('font-loading');
               };
               document.head.appendChild(link);
+              
+              // Fallback timeout
+              setTimeout(() => {
+                document.documentElement.classList.add('fonts-loaded');
+                document.documentElement.classList.remove('font-loading');
+              }, 3000);
+            } else {
+              // Skip custom fonts on slow connections
+              document.documentElement.classList.add('fonts-loaded');
+              document.documentElement.classList.remove('font-loading');
             }
+            
+            // Preload critical CSS asynchronously
+            const criticalCSS = document.createElement('link');
+            criticalCSS.rel = 'preload';
+            criticalCSS.as = 'style';
+            criticalCSS.href = '/path-to-critical.css';
+            criticalCSS.onload = function() {
+              this.rel = 'stylesheet';
+            };
+            document.head.appendChild(criticalCSS);
           `
         }} />
         
-        {/* Preconnect only for fast connections */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        {/* Fallback for no-JS users */}
+        <noscript>
+          <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet" />
+          <style dangerouslySetInnerHTML={{
+            __html: `.font-loading { visibility: visible !important; }`
+          }} />
+        </noscript>
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <Header />

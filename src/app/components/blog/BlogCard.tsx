@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-
+import Image from 'next/image'
 interface BlogCardProps {
   id: number;
   slug: string;
@@ -28,13 +28,10 @@ interface BlogCardProps {
 }
 
 export const BlogCard: React.FC<BlogCardProps> = ({
-  id,
-  slug,
   title,
   thumbnail,
   tags,
   createdAt,
-  content,
   onClick
 }) => {
   const [allTag,setAllTag]=useState(['It Consulting','Design','Branding','Engineering','Other']);
@@ -63,7 +60,8 @@ return (
 >
   {/* Header with thumbnail */}
   <div className="relative aspect-[4/3] w-full">
-    <img 
+    <Image
+      width={100} height={100}
       src={thumbnail} 
       alt={title}
       className="w-full h-full object-cover"

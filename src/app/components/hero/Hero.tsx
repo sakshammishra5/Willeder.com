@@ -2,7 +2,7 @@
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-
+import Image from 'next/image'
 interface HeroProps {
   title?: string;
   subtitle?: string;
@@ -38,14 +38,15 @@ export const Hero: React.FC<HeroProps> = ({
           >
             {buttonText}
             <span className='w-[34px] h-[24px]'>
-              <img className='w-full h-full' srcSet="/arrow_1.png" alt="" />
+              <Image  width={34} height={24} className='w-full h-full' src="/arrow_1.png" alt="" />
             </span>
           </button>
         </div>
 
         {/* Animated Illustration */}
         <div className="relative flex items-center justify-center ">
-          <img
+          <Image
+            width={100} height={100}
             src="/Group.png"
             alt="Deal Animation"
             className="w-full max-w-lg h-auto object-contain"
@@ -67,7 +68,8 @@ export const Hero: React.FC<HeroProps> = ({
 
         {/* Animated Illustration */}
         <div className="w-[343px] h-[372.5px] sm:w-[720px] sm:h-[781.92px] relative flex items-center justify-center  max-w-md">
-          <img
+          <Image
+            width={100} height={100}
             src="/Group.png"
             alt="Deal Animation"
             className="w-full h-auto object-contain"

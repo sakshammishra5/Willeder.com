@@ -1,5 +1,5 @@
 import React from 'react';
-
+import Image from 'next/image'
 
 interface ServiceCardProps {
   title: string;
@@ -13,7 +13,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ title, subtitle, description,
     <div className="w-[343px] h-[460px] sm:h-fit lg:h-fit sm:w-full lg-w-full text-center max-w-[410px] font-noto-sans-jp font-medium text-base leading-[1.25] tracking-normal">
       {/* Icon */}
       <div className="w-[280px] h-[280px] mx-auto">
-        <img srcSet={icon} alt="" className="h-full w-full" />
+        <Image width={100} height={100} src={icon} alt="" className="h-full w-full" />
       </div>
       <div className='extra-compact'>
         {/* div container for title and subtitle and green border */}

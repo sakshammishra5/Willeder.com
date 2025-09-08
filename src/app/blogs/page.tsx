@@ -1,6 +1,6 @@
 "use client";
 import React, { Suspense, useEffect, useState } from 'react';
-import { Calendar, Search } from 'lucide-react';
+import {  Search } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { BlogCard } from '../components/blog/BlogCard';
 

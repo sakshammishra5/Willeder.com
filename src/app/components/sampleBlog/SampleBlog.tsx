@@ -1,8 +1,8 @@
 "use client";
 import React from 'react';
-import { Calendar, ArrowRight } from 'lucide-react';
 import { BlogCard } from '../blog/BlogCard';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image'
 interface BlogPost {
   id: number;
   slug: string;
@@ -29,9 +29,6 @@ interface BlogPost {
   createdAt: string;
 }
 
-interface BlogCardProps extends BlogPost {
-  onClick?: () => void;
-}
 
 interface SampleBlogProps {
   onBlogClick?: (slug: string) => void;
@@ -198,7 +195,7 @@ export const SampleBlog: React.FC<SampleBlogProps> = ({
     <div className='flex gap-4  items-center justify-center h-[34px] font-noto-sans-jp font-bold cursor-pointer tracking-[5%] leading-[150%]'>
       <p className='w-full  hover:text-[#AD002D]'>もっと見る</p>
       <div>
-        <img className='h-full hover:text-[#AD002D]' srcSet="/arrow2.png" alt="" />
+        <Image width={100} height={100} className='h-full hover:text-[#AD002D]' src="/arrow2.png" alt="" />
       </div>
     </div>
   </div>
