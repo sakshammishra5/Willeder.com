@@ -3,3 +3,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Font loading optimization */
+@media (prefers-reduced-data: reduce) {
+  .font-jost, .font-noto {
+    font-family: system-ui, sans-serif !important;
+  }
+}
