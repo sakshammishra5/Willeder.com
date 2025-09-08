@@ -34,7 +34,7 @@ export const Hero: React.FC<HeroProps> = ({
 
           <button
               onClick={() => router.push('/contact')}
-            className="w-[405px] h-[68px] group bg-red-700 hover:bg-[#F23D6D] text-white px-12 py-4 rounded-2xl font-semibold text-lg  shadow-lg hover:shadow-xl flex items-center gap-2"
+            className="w-[405px] h-[68px] mt-4 group bg-red-700 hover:bg-[#F23D6D] text-white px-12 py-4 rounded-2xl font-semibold text-lg  shadow-lg hover:shadow-xl flex items-center gap-2"
           >
             {buttonText}
             <span className='w-[34px] h-[24px]'>
@@ -55,7 +55,7 @@ export const Hero: React.FC<HeroProps> = ({
       </div>
 
       {/* Mobile and Tablet Layout */}
-      <div className="lg:hidden flex flex-col gap-12 items-center text-center w-full h-[768px]">
+      <div className="lg:hidden mt-12 flex flex-col gap-12 items-center text-center w-full h-[768px]">
         {/* Text Content */}
         <div className="w-[343px] h-[104.67px] sm:w-[720px] sm:h-[219px] mb-[13px]">
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900 leading-tight">
