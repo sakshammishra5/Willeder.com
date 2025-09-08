@@ -29,13 +29,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="dns-prefetch" href="//fonts.googleapis.com" />
-        <link rel="dns-prefetch" href="//fonts.gstatic.com" />
+        {/* Preconnect to Google Fonts for performance */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-
-        <link href="https://fonts.googleapis.com/css2?family=Jost&display=swap" rel="stylesheet" />
-        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP&display=swap" rel="stylesheet" />
+        
+        {/* Load Google Fonts */}
+        <link 
+          href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" 
+          rel="stylesheet" 
+        />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <Header />
